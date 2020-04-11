@@ -80,6 +80,9 @@ class Solution:
             if i < n + 1:
                 front = front.next
                 i += 1
+            # i==n+1 时表示 front 和 back 之间相差 n+1 个节点
+            # 然后 front 和 back 一起先后移动
+            # 到 front 为空，back.next 即为倒数第 n 个节点
             else:
                 front = front.next
                 back = back.next

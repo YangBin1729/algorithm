@@ -70,7 +70,6 @@ class Solution:
         """
         2. 直接寻找到旋转点
         """
-
         # 链表长度及最后节点
         n = 0
         last = head

@@ -27,33 +27,52 @@
 #
 #
 
+from typing import List
+
 
 # @lc code=start
 class Solution:
-    def trap(self, height: List[int]) -> int:
-        # HOMEWORK:
-        # 暴力
-        # n = len(height)
-        # total_volume = 0
-        # for i in range(1, n - 1):
-        #     h = min(max(height[:i]), max(height[i + 1:]))
-        #     if h > height[i]:
-        #         total_volume += h - height[i]
-        # return total_volume
 
-        # 栈
-        total_volume, i = 0, 0
+    def trap(self, height: List[int]) -> int:
+        """
+        TODO: 栈
+        栈中只保存依次递减的水柱，遍历所有水柱时，遇到比栈顶水柱更高时，就弹出
+        """
+        ans, i = 0, 0
         stack = []
         while i < len(height):
             while stack != [] and height[i] > height[stack[-1]]:
+                print([height[j] for j in stack])
+
                 top = stack.pop()
-                if stack == []: break
+                if stack == []:
+                    break
                 span = i - stack[-1] - 1
                 h = min(height[stack[-1]], height[i]) - height[top]
-                total_volume += span*h
+                ans += span * h
             stack.append(i)
             i += 1
-        return total_volume
+        return ans
+
+    def trap_1(self, height: List[int]) -> int:
+        # 按行求解
+        ans = 0
+        k = max(height)
+
+        for i in range(1, k + 1):
+            start = False
+            tmp = 0
+            for j in range(len(height)):
+                if start and height[j] < i:
+                    tmp += 1
+                elif height[j] >= i:
+                    ans += tmp
+                    tmp = 0
+                    start = True
+        return ans
 
 
 # @lc code=end
+
+height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+print(Solution().trap(height))

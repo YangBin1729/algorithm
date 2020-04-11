@@ -41,6 +41,7 @@
 #
 #
 #
+
 from typing import List
 
 
@@ -83,7 +84,7 @@ class Solution:
         i = 0
         tmp = nums[i]
         cnt = 0
-        
+
         while cnt < n:
 
             # 从 i 出发替换，直到返回到 i
@@ -99,7 +100,11 @@ class Solution:
             i += 1
             tmp = nums[i]
 
+
 # @lc code=end
 
 nums = [0, 1, 2, 3]
 print(Solution().rotate_2(nums, 1))
+
+
+

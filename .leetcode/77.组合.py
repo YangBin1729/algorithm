@@ -47,7 +47,6 @@ class Solution:
         2. 递归：
         # TODO: 时间复杂度
         """
-
         res = []
 
         def backtrack(lvl=1, cur=[]):
@@ -55,9 +54,8 @@ class Solution:
                 res.append(cur[:])
             for i in range(lvl, n + 1):
                 cur.append(i)
-                backtrack(i + 1, cur)
-                cur.pop()
-                # 复原 cur ,保证同一层循环的 cur 相同
+                backtrack(i + 1, cur)     # 在 i 的基础上更进一层，而不是 lvl
+                cur.pop()     # 复原 cur ,保证同一层循环的 cur 相同
 
         backtrack()
         return res

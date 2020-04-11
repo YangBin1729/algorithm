@@ -42,6 +42,8 @@ class Solution:
         """
         哈希表
         """
+        # from collections import defaultdict
+        # d = defaultdict(list)
         d = {}
         for str in strs:
             key = tuple(sorted(str))

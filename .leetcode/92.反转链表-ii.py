@@ -74,22 +74,27 @@ class Solution:
         dummy = ListNode(0)
         dummy.next = head
 
-        cur = dummy
+        prev = dummy
         i = 0
         while i < m - 1:
-            cur = cur.next
+            prev = prev.next
             i += 1
-        prev = cur
-
         end = prev.next
-        tmp = end.next
-        for _ in range(n - m):
-            end.next = tmp.next
-            tmp.next = prev.next
-            prev.next = tmp
-            tmp = end.next
 
+        while i < n-1:
+            start = prev.next
+            curr = end.next
+            nxt = curr.next
+
+            prev.next = curr
+            end.next = nxt
+            curr.next = start
+
+            i += 1
         return dummy.next
+
+
+                
 
 
 # @lc code=end

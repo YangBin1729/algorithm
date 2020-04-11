@@ -37,13 +37,15 @@
 # 输出: 10
 #
 #
+
 from typing import List
 
 
 # @lc code=start
 class Solution:
+
     def largestRectangleArea(self, heights: List[int]) -> int:
-        # 3. 栈     
+        # 3. 栈
         # # KEY：栈的巧妙应用！
         heights.append(0)
         stack = [-1]

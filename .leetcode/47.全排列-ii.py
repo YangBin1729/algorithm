@@ -27,22 +27,27 @@
 #
 #
 
+from typing import List
+
 
 # @lc code=start
 class Solution:
+
     def permuteUnique(self, nums: List[int]) -> List[List[int]]:
-        # 46.全排列的解法中添加判断条件：tmp not in res
-        # res = []
-        # def backtrack(nums, tmp):
-        #     if not nums and tmp not in res:
-        #         res.append(tmp)
-        #     for i in range(len(nums)):
-        #         backtrack(nums[:i] + nums[i + 1:], tmp + [nums[i]])
+        res = []
+        nums.sort()
 
-        # backtrack(nums, [])
+        def backtrack(nums, tmp):
+            if not nums:
+                res.append(tmp)
+                return
+            for i in range(len(nums)):
+                if i > 0 and nums[i] == nums[i - 1]:
+                    continue
+                backtrack(nums[:i] + nums[i + 1:], tmp + [nums[i]])
 
-        # TODO:
- 
+        backtrack(nums, [])
+        return res
 
 
 # @lc code=end

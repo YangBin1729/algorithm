@@ -1,41 +1,48 @@
-def reversePairs(nums):
-    res = 0
-
-    def merge_sort(nums):
-        n = len(nums)
-        if n <= 1:
-            return nums
-        s1 = merge_sort(nums[:n // 2])
-        s2 = merge_sort(nums[n // 2:])
-        return merge(s1, s2)
-
-    def merge(s1, s2):
-        nonlocal res
-        i = j = 0
-        while i < len(s1) and j < len(s2):
-            if s1[i] > 2 * s2[j]:
-                res += len(s1) - i
-                j += 1
-            else:
-                i += 1
-        return sorted(s1 + s2)
-
-    merge_sort(nums)
+def inorder(root):
+    res = []
+    stack, cur = [], root
+    while stack or cur:
+        while cur:
+            stack.append(cur)
+            cur = cur.left
+        cur = stack.pop()
+        res.append(cur.val)
+        cur = cur.right
     return res
 
 
-nums = [2, 4, 3, 5, 0]
-# print(reversePairs(nums))
+def preorder(root):
+    res = []
+    stack = [root]
+    while stack:
+        cur = stack.pop()
+        if cur:
+            res.append(cur.val)
+            if cur.right:
+                stack.append(cur.right)
+            if cur.left:
+                stack.append(cur.left)
+    return res
 
-nums.sort(key=lambda x: x)
-print(nums)
+
+def postorder(root):
+    res = []
+    stack = [root]
+    while stack:
+        cur = stack.pop()
+        if cur:
+            res.append(cur.val)
+            for child in cur.children:
+                stack.append(child)
+    return res[::-1]
 
 
-def sortColors(nums):
-    d = {0: 0, 1: 1, 2: 2}
-    nums.sort(key=lambda x: d.get(x))
+def levelorder(root):
+    res = []
+    level = [root]
+    while level:
+        res.append([node.val for node in level])
+        level = [child for node in level for child in [node.left, node.right] if child]
+    return res
 
 
-nums = [2, 0, 2, 1, 1, 0]
-sortColors(nums)
-print(nums)

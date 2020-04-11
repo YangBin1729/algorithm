@@ -43,9 +43,11 @@
 # @lc code=start
 class Solution:
 
-    def lengthOfLongestSubstring_2(self, s: str) -> int:
-        # 1. 动态规划：O(N^2)
-        # res[i] 数组表示以 s[i] 为结尾的最长无重复子串
+    def lengthOfLongestSubstring_3(self, s: str) -> int:
+        """
+        1. 动态规划：O(N^2)
+        res[i] 数组表示以 s[i] 为结尾的最长无重复子串
+        """
         if not s:
             return 0
 
@@ -53,16 +55,18 @@ class Solution:
         res = [1] * n
         ans = 0
         for i in range(1, n):
-            longest_substring = s[i - res[i - 1]:i]
-            if s[i] not in longest_substring:
+            sub = s[i - res[i - 1]:i]
+            if s[i] not in sub:
                 res[i] = res[i - 1] + 1
             else:
-                res[i] = res[i - 1] - longest_substring.index(s[i])
+                res[i] = res[i - 1] - sub.index(s[i])
             ans = max(ans, res[i])
         return ans
 
-    def lengthOfLongestSubstring_3(self, s: str) -> int:
-        # 2. 集合+滑动窗口：索引 i~j 为最长子串
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        """
+        2. 集合+滑动窗口：索引 i~j 为最长子串，lookup 记录子串字母
+        """
         if not s:
             return 0
 
@@ -77,13 +81,15 @@ class Solution:
                 j += 1
                 ans = max(ans, j - i)
             else:
-                lookup.remove(s[i])
+                lookup.remove(s[i])     # KEY：当 s[j] 在集合中，是不断删除 s[i] 元素，直到与 s[j] 相同的这个元素
                 i += 1
         return ans
 
-    def lengthOfLongestSubstring(self, s: str) -> int:
-        # 3. 字典：
-        # KEY：利用字典记录每个字符的最新索引
+    def lengthOfLongestSubstring_2(self, s: str) -> int:
+        """
+        3. 字典：
+        KEY：利用字典记录每个字符的最新索引
+        """
         if not s:
             return 0
 
@@ -103,5 +109,6 @@ class Solution:
 
 
 # @lc code=end
-s = 'pwwkew'
-print(Solution().lengthOfLongestSubstring(s))
+
+s = "tmmzuxt"
+print(Solution().lengthOfLongestSubstring_2(s))

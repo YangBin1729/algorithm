@@ -29,13 +29,31 @@
 #
 
 
-# @lc code=start
-# Definition for singly-linked list.
 class ListNode:
 
     def __init__(self, x):
         self.val = x
         self.next = None
+
+    def __str__(self):
+        s = f'{self.val}'
+        tmp = self.next
+        while tmp is not None:
+            s += f'-->{tmp.val}'
+            tmp = tmp.next
+        return s + '-->NULL'
+
+    def __repr__(self):
+        return self.__str__()
+
+
+# @lc code=start
+# Definition for singly-linked list.
+# class ListNode:
+
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
 
 
 class Solution:
@@ -56,15 +74,55 @@ class Solution:
                 head = head.next
             return self.deleteDuplicates(head.next)
 
-
     def deleteDuplicates(self, head: ListNode) -> ListNode:
         """
-        TODO: 2. 迭代 
+        TODO: 2. 迭代，快慢指针
         """
         if not head or not head.next:
             return head
 
-            
+        dummy = ListNode(None)
+        dummy.next = head
+
+        slow = dummy
+        fast = dummy.next
+        while fast:
+            if fast.next and fast.next.val == fast.val:
+                tmp = fast.val
+                while fast and tmp == fast.val:
+                    fast = fast.next
+            else:
+                slow.next = fast
+                slow = fast
+                fast = fast.next
+        slow.next = fast
+        return dummy.next
+
+    def deleteDuplicates_2(self, head: ListNode) -> ListNode:
+        """
+        TODO: 2. 迭代 
+        """
+        dummy = ListNode(0)
+        dummy.next = head
+
+        prev = dummy
+        curr = head
+        flag = False     # 表征是否出现了重复的元素
+        while curr:
+            while curr.next and curr.next.val == curr.val:
+                flag = True
+                curr = curr.next
+                # 移动到相同元素的最后一位
+            if flag and curr:
+                # 出现了重复元素时，继续下移一位 --> 忽略了所有相同元素
+                prev.next = curr.next
+                flag = False
+            else:
+                prev.next = curr
+                prev = curr
+            curr = curr.next
+
+        return dummy.next
 
 
 # @lc code=end

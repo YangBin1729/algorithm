@@ -47,6 +47,9 @@ class Solution:
         """
         2. 哈希表，一次遍历
         KEY：将 数 及 余数的索引 作为键值对储存
+        >>> nums=[2,4,5],target=7 
+            i=0 --> {7-2: 0} 
+            i=1 --> {5: 0, 7-4: 1}
         """
 
         nums_dict = dict()
@@ -59,16 +62,4 @@ class Solution:
 
 # @lc code=end
 
-import math
 
-
-def findContinuousSequence(target):
-    res = []
-    for n in range(int(math.sqrt(2 * target)) + 1, 1, -1):
-        t, r = divmod(2 * target - n**2 + n, 2 * n)
-        if r == 0 and t >= 1:
-            res.append(list(range(t, t + n)))
-    return res
-
-
-print(findContinuousSequence(15))

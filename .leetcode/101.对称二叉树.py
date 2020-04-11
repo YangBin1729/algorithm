@@ -52,7 +52,7 @@ class TreeNode:
 
 class Solution:
 
-    def isSymmetric(self, root: TreeNode) -> bool:
+    def isSymmetric_1(self, root: TreeNode) -> bool:
         """
         层序遍历，每层的值列表应该对称
         """
@@ -97,6 +97,19 @@ class Solution:
             level = next_level
         return True
 
+
+    def isSymmetric(self, root: TreeNode) -> bool:
+        """
+        问题转换成两棵树是否为镜像
+        """
+        def isMirror(t1, t2):
+            if not t1 and not t2:
+                return True
+            if not t1 or not t2:
+                return False
+            return (t1.val==t2.val) and isMirror(t1.left, t2.right) and isMirror(t1.right, t2.left)
+
+        return isMirror(root, root)
 
 
 

@@ -87,51 +87,77 @@ class Solution:
                                 newlayer[new_w] += [j + [new_w] for j in layer[w]]
             wordSet -= set(newlayer.keys())
             layer = newlayer
-        return res 
+        return res
 
 
 # @lc code=end
 
-begin = "red"
-end = "tax"
-words= ["ted","tex","red","tax","tad","den","rex","pee"]
-print(Solution().findLadders(begin, end, words)
+beginWord = "hot"
+endWord = "dog"
+wordList = ["hot", "dog", "dot"]
 
 
+def findLadders(beginWord, endWord, wordList):
+    wordSet = set(wordList)
+    if endWord not in wordSet:
+        return []
+
+    from collections import defaultdict
+    wordDict = defaultdict(list)
+
+    def getNext(word):
+        n = len(word)
+        res = []
+        for i in range(n):
+            for char in 'abcdefghijklmnopqrstuvwxyz':
+                nxt = word[:i] + char + word[i + 1:]
+                if nxt in wordSet and nxt != word:
+                    res.append(nxt)
+        return res
+
+    wordDict[beginWord].extend(getNext(beginWord))
+    for word in wordSet:
+        if word not in wordDict:
+            wordDict[word].extend(getNext(word))
+
+    def betterChoices(choices):
+        """
+        优先选择使差距变小的单词
+        """
+        diff = []
+        min_diff = len(endWord)
+        for word in choices:
+            d = 0
+            for i in range(len(word)):
+                if word[i] != endWord[i]:
+                    d += 1
+            min_diff = min(min_diff, d)
+            diff.append(d)
+        return [w for w, d in zip(choices, diff) if d == min_diff]
+
+    res = []
+
+    def helper(curr, visited):
+        tmp = curr[-1]
+        choices = betterChoices(wordDict[tmp])
+
+        if not choices:
+            return
+
+        if endWord in choices:
+            res.append(curr + [endWord])
+            return
+        for nxt in choices:
+            if nxt not in visited:
+                visited.add(nxt)
+                helper(curr + [nxt], visited)
+                visited.remove(nxt)
+
+    helper([beginWord], {beginWord})
+    return res
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(findLadders(beginWord, endWord, wordList))
 
 # """
 # 求解全过程：
@@ -144,99 +170,98 @@ print(Solution().findLadders(begin, end, words)
 #     queue = deque([([beginWord], 1)])
 #     visited = set(beginWord)
 
-#     res = []
-    
-#     while queue:
-#         path, changes = queue.popleft()
-#         curr = path[-1]
-#         if curr == endWord:
-#             res.append(path)
+     #     res = []
 
-#         for w in wordList:
-#             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
-#                 queue.append((path + [w], changes + 1))
-#                 visited.add(w)
-    
-#     return res
+     #     while queue:
+     #         path, changes = queue.popleft()
+     #         curr = path[-1]
+     #         if curr == endWord:
+     #             res.append(path)
 
-# beginWord = "hit"
-# endWord = "cog"
-# wordList = ["hot", "dot", "dog", "lot", "log", "cog"]
-# print(findLadders1(beginWord, endWord, wordList))   
+     #         for w in wordList:
+     #             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
+     #                 queue.append((path + [w], changes + 1))
+     #                 visited.add(w)
 
-# """
-# 2. 改进
-# - 当访问 endWord 时，该单词不添加到 visited 集合中；
-# - 得到的结果不是最短的结果
-# """
-# def findLadders2(beginWord, endWord, wordList):
-#     from collections import deque
-#     queue = deque([([beginWord], 1)])
-#     visited = set(beginWord)
-#     res = []
-    
-#     while queue:
-#         path, changes = queue.popleft()
-#         curr = path[-1]
-#         for w in wordList:
-#             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
-#                 if w == endWord:
-#                     res.append(path + [w])
-#                     continue
-#                 queue.append((path + [w], changes + 1))
-#                 visited.add(w)
-    
-#     return res
+     #     return res
 
-# begin = "a"
-# end = "c"
-# words = ["a", "b", "c", "d"]
-# print(findLadders2(begin, end, words))    
+     # beginWord = "hit"
+     # endWord = "cog"
+     # wordList = ["hot", "dot", "dog", "lot", "log", "cog"]
+     # print(findLadders1(beginWord, endWord, wordList))
 
-# """
-# 3. 改进
-# - 添加限制，当访问 endWord 时，保存一个 min_steps， 当其他路径大于该步数时，终止运行
-# """
-# def findLadders3(beginWord, endWord, wordList):
-#     from collections import deque
-#     queue = deque([([beginWord], 1)])
-#     visited = set(beginWord)
-#     res = []
-#     min_steps = float('inf')
-    
-#     while queue:
-#         path, changes = queue.popleft()
-#         if changes >= min_steps:
-#             break
-#         curr = path[-1]
-#         for w in wordList:
-#             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
-#                 if w == endWord:
-#                     res.append(path + [w])
-#                     min_steps = changes + 1
-#                     break
-#                 queue.append((path + [w], changes + 1))
-#                 visited.add(w)
-    
-#     return res
+     # """
+     # 2. 改进
+     # - 当访问 endWord 时，该单词不添加到 visited 集合中；
+     # - 得到的结果不是最短的结果
+     # """
+     # def findLadders2(beginWord, endWord, wordList):
+     #     from collections import deque
+     #     queue = deque([([beginWord], 1)])
+     #     visited = set(beginWord)
+     #     res = []
 
-# begin = "a"
-# end = "c"
-# words = ["a", "b", "c", "d"]
-# print(findLadders3(begin, end, words)) 
+     #     while queue:
+     #         path, changes = queue.popleft()
+     #         curr = path[-1]
+     #         for w in wordList:
+     #             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
+     #                 if w == endWord:
+     #                     res.append(path + [w])
+     #                     continue
+     #                 queue.append((path + [w], changes + 1))
+     #                 visited.add(w)
 
+     #     return res
 
-# """
-# 4. 无法获得完整解：
-# - 队列为 [red,ted], [red,rex]
-# - 先弹出 [red,ted], 生成新路径 [red,ted,tex], [red,ted,tad] 添加到队列
-# - 此时 tex、tad 已被访问
-# - 再弹出 [red,tex] 时没有后续节点了，相应的解被忽略
-# # TODO：
-# """
-# begin = "red"
-# end = "tax"
-# words= ["ted","tex","red","tax","tad","den","rex","pee"]
-# print(findLadders3(begin, end, words)) 
-# # 输出：[["red","ted","tex","tax"],["red","ted","tad","tax"]]
-# # 预期：[["red","ted","tad","tax"],["red","ted","tex","tax"],["red","rex","tex","tax"]]
+     # begin = "a"
+     # end = "c"
+     # words = ["a", "b", "c", "d"]
+     # print(findLadders2(begin, end, words))
+
+     # """
+     # 3. 改进
+     # - 添加限制，当访问 endWord 时，保存一个 min_steps， 当其他路径大于该步数时，终止运行
+     # """
+     # def findLadders3(beginWord, endWord, wordList):
+     #     from collections import deque
+     #     queue = deque([([beginWord], 1)])
+     #     visited = set(beginWord)
+     #     res = []
+     #     min_steps = float('inf')
+
+     #     while queue:
+     #         path, changes = queue.popleft()
+     #         if changes >= min_steps:
+     #             break
+     #         curr = path[-1]
+     #         for w in wordList:
+     #             if sum([c != n for c, n in zip(curr, w)]) == 1 and w not in visited:
+     #                 if w == endWord:
+     #                     res.append(path + [w])
+     #                     min_steps = changes + 1
+     #                     break
+     #                 queue.append((path + [w], changes + 1))
+     #                 visited.add(w)
+
+     #     return res
+
+     # begin = "a"
+     # end = "c"
+     # words = ["a", "b", "c", "d"]
+     # print(findLadders3(begin, end, words))
+
+     # """
+     # 4. 无法获得完整解：
+     # - 队列为 [red,ted], [red,rex]
+     # - 先弹出 [red,ted], 生成新路径 [red,ted,tex], [red,ted,tad] 添加到队列
+     # - 此时 tex、tad 已被访问
+     # - 再弹出 [red,tex] 时没有后续节点了，相应的解被忽略
+     # # TODO：
+     # """
+     # begin = "red"
+     # end = "tax"
+     # words= ["ted","tex","red","tax","tad","den","rex","pee"]
+     # print(findLadders3(begin, end, words))
+     # # 输出：[["red","ted","tex","tax"],["red","ted","tad","tax"]]
+     # # 预期：[["red","ted","tad","tax"],["red","ted","tex","tax"],["red","rex","tex","tax"]]

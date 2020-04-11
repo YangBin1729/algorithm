@@ -48,11 +48,13 @@
 # 你能在线性时间复杂度内解决此题吗？
 #
 #
+
 from typing import List
 
 
 # @lc code=start
 class Solution:
+
     def maxSlidingWindow_1(self, nums: List[int], k: int) -> List[int]:
         # 1. 暴力遍历，求切片的最大值
         n = len(nums)
@@ -61,7 +63,7 @@ class Solution:
         return [max(nums[i:i + k]) for i in range(n - k + 1)]
 
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        # TODO: 2. 双端队列
+        # TODO: 2. 双端队列，保留连续 k 个数中递减的那几个，
         # KEY：双端队列的妙用！！！
         from collections import deque
         res = []
@@ -70,16 +72,21 @@ class Solution:
         for i in range(len(nums)):
             if i >= k and i - k == queue[0]:
                 queue.popleft()
+                # 连续 k 个数，都是递减的，最左边的数总是最大的
+
             while queue and nums[queue[-1]] <= nums[i]:
                 queue.pop()
+                # 弹出比当前值小的队列中的元素
             queue.append(i)
 
             if i >= k - 1:
-                res.append(nums[queue[-1]])
+                res.append(nums[queue[0]])
 
         return res
 
 
-
-
 # @lc code=end
+
+nums = [1, 3, -1, -3, 5, 3, 6, 7]
+k = 3
+print(Solution().maxSlidingWindow(nums, k))

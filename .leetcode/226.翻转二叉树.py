@@ -62,10 +62,8 @@ class Solution:
         """
         1. 递归
         """
-        if root and (root.left or root.right):
-            root.left, root.right = root.right, root.left
-            self.invertTree(root.left)
-            self.invertTree(root.right)
+        if root:
+            root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
         return root
 
     def invertTree(self, root: TreeNode) -> TreeNode:

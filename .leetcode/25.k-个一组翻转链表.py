@@ -88,6 +88,42 @@ class Solution:
             tail = head
         return dummy.next
 
+
+    def reverseKGroup_3(self, head: ListNode, k: int) -> ListNode:
+        def reverseBetween(prev, nxt):
+            """
+            逆转 prev 和 nxt 中间的节点：0->1->2->3->4 转换成 0->3->2->1->4
+            返回节点 1 作为下一次循环的 prev 节点
+            """
+            tmp_prev = nxt
+            end = curr = prev.next
+            while curr != nxt:
+                tmp = curr.next
+                curr.next = tmp_prev
+
+                tmp_prev = curr
+                curr = tmp
+            prev.next = tmp_prev
+            
+            return end 
+        
+        dummy = ListNode(0)
+        dummy.next = head
+
+        prev = dummy
+        while prev:
+            i = 0
+            nxt = prev
+            while nxt and i <= k:
+                nxt = nxt.next
+                i += 1
+            if i < k + 1:
+                break 
+            prev = reverseBetween(prev, nxt)
+
+        return dummy.next
+
+
     def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
         """
         2. 转换成节点列表，会消耗 O(N) 的空间

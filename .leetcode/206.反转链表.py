@@ -55,10 +55,10 @@ class Solution:
         """
         prev = None
         while head:
-            next = head.next
+            nxt = head.next
             head.next = prev
             prev = head
-            head = next
+            head = nxt
         return prev
 
     def reverseList_2(self, head: ListNode) -> ListNode:
@@ -75,7 +75,7 @@ class Solution:
         tail = prev
         while tail.next:
             tail = tail.next
-        
+
         while prev.next != tail:
             cur = prev.next
             prev.next = cur.next
@@ -83,6 +83,31 @@ class Solution:
             tail.next = cur
         return dummy.next
 
+    def reverseList_3(self, head: ListNode) -> ListNode:
+        """
+        0->1->2->3->4
+        0->2->1->3->4
+        0->3->2->1->4
+        0->4->3->2->1
+        """
+        if not head:
+            return head
+
+        dummy = ListNode(-1)
+        dummy.next = head
+
+        end = head
+        prev = head
+        while end.next:
+            curr = end.next
+            nxt = curr.next
+
+            dummy.next = curr
+            end.next = nxt
+            curr.next = prev
+            prev = curr
+
+        return dummy.next
 
     def reverseList(self, head: ListNode) -> ListNode:
         """
