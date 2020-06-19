@@ -64,16 +64,20 @@ from typing import List
 class Solution:
 
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
-        # TODO:
+        """
+        层序遍历：
+        - 利用字典保存每层节点，节点记录当前单词和到该单词的转换序列
+        - 更新下一层节点时，候选单词不应包含在上层节点中，避免重复路径保证最短转换序列
+        """
         from collections import defaultdict
-        wordSet = set(wordList)
+        wordSet = set(wordList)     # 记录下一层的 候选单词
 
         res = []
-        layer = {}
+        layer = {}     # 子典记录当前层的节点，键为当前单词，值为到该单词的所有转换序列
         layer[beginWord] = [[beginWord]]
 
         while layer:
-            newlayer = defaultdict(list)
+            newlayer = defaultdict(list)     # 下一层的节点
 
             for w in layer:
                 if w == endWord:
@@ -82,10 +86,12 @@ class Solution:
                 else:
                     for i in range(len(w)):
                         for c in 'abcdefghijklmnopqrstuvwxyz':
-                            new_w = w[:i] + c + w[i + 1:]
-                            if new_w in wordSet:
+                            new_w = w[:i] + c + w[i + 1:]     # 可转换到的下一个单词
+
+                            if new_w in wordSet:     # 单词是否在 候选字典 中
                                 newlayer[new_w] += [j + [new_w] for j in layer[w]]
-            wordSet -= set(newlayer.keys())
+
+            wordSet -= set(newlayer.keys())     # 之前层的单词不会出现在下一层，即保证了最短路径
             layer = newlayer
         return res
 
@@ -95,69 +101,7 @@ class Solution:
 beginWord = "hot"
 endWord = "dog"
 wordList = ["hot", "dog", "dot"]
-
-
-def findLadders(beginWord, endWord, wordList):
-    wordSet = set(wordList)
-    if endWord not in wordSet:
-        return []
-
-    from collections import defaultdict
-    wordDict = defaultdict(list)
-
-    def getNext(word):
-        n = len(word)
-        res = []
-        for i in range(n):
-            for char in 'abcdefghijklmnopqrstuvwxyz':
-                nxt = word[:i] + char + word[i + 1:]
-                if nxt in wordSet and nxt != word:
-                    res.append(nxt)
-        return res
-
-    wordDict[beginWord].extend(getNext(beginWord))
-    for word in wordSet:
-        if word not in wordDict:
-            wordDict[word].extend(getNext(word))
-
-    def betterChoices(choices):
-        """
-        优先选择使差距变小的单词
-        """
-        diff = []
-        min_diff = len(endWord)
-        for word in choices:
-            d = 0
-            for i in range(len(word)):
-                if word[i] != endWord[i]:
-                    d += 1
-            min_diff = min(min_diff, d)
-            diff.append(d)
-        return [w for w, d in zip(choices, diff) if d == min_diff]
-
-    res = []
-
-    def helper(curr, visited):
-        tmp = curr[-1]
-        choices = betterChoices(wordDict[tmp])
-
-        if not choices:
-            return
-
-        if endWord in choices:
-            res.append(curr + [endWord])
-            return
-        for nxt in choices:
-            if nxt not in visited:
-                visited.add(nxt)
-                helper(curr + [nxt], visited)
-                visited.remove(nxt)
-
-    helper([beginWord], {beginWord})
-    return res
-
-
-print(findLadders(beginWord, endWord, wordList))
+print(Solution().findLadders(beginWord, endWord, wordList))
 
 # """
 # 求解全过程：
@@ -265,3 +209,62 @@ print(findLadders(beginWord, endWord, wordList))
      # print(findLadders3(begin, end, words))
      # # 输出：[["red","ted","tex","tax"],["red","ted","tad","tax"]]
      # # 预期：[["red","ted","tad","tax"],["red","ted","tex","tax"],["red","rex","tex","tax"]]
+
+     # def findLadders(beginWord, endWord, wordList):
+     #     wordSet = set(wordList)
+     #     if endWord not in wordSet:
+     #         return []
+
+     #     from collections import defaultdict
+     #     wordDict = defaultdict(list)
+
+     #     def getNext(word):
+     #         n = len(word)
+     #         res = []
+     #         for i in range(n):
+     #             for char in 'abcdefghijklmnopqrstuvwxyz':
+     #                 nxt = word[:i] + char + word[i + 1:]
+     #                 if nxt in wordSet and nxt != word:
+     #                     res.append(nxt)
+     #         return res
+
+     #     wordDict[beginWord].extend(getNext(beginWord))
+     #     for word in wordSet:
+     #         if word not in wordDict:
+     #             wordDict[word].extend(getNext(word))
+
+     #     def betterChoices(choices):
+     #         """
+     #         优先选择使差距变小的单词
+     #         """
+     #         diff = []
+     #         min_diff = len(endWord)
+     #         for word in choices:
+     #             d = 0
+     #             for i in range(len(word)):
+     #                 if word[i] != endWord[i]:
+     #                     d += 1
+     #             min_diff = min(min_diff, d)
+     #             diff.append(d)
+     #         return [w for w, d in zip(choices, diff) if d == min_diff]
+
+     #     res = []
+
+     #     def helper(curr, visited):
+     #         tmp = curr[-1]
+     #         choices = betterChoices(wordDict[tmp])
+
+     #         if not choices:
+     #             return
+
+     #         if endWord in choices:
+     #             res.append(curr + [endWord])
+     #             return
+     #         for nxt in choices:
+     #             if nxt not in visited:
+     #                 visited.add(nxt)
+     #                 helper(curr + [nxt], visited)
+     #                 visited.remove(nxt)
+
+     #     helper([beginWord], {beginWord})
+     #     return res

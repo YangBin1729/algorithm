@@ -36,7 +36,9 @@ from typing import List
 class Solution:
 
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        # KEY：解法比较巧妙
+        """
+        先排序，后合并
+        """
 
         intervals.sort(key=lambda x:x[0])
 

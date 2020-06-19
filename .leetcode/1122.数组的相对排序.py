@@ -91,7 +91,7 @@ class Solution:
         return ans
 
     def relativeSortArray(self, arr1: List[int], arr2: List[int]) -> List[int]:
-        # KEY：简化代码
+        # KEY：精简版
 
         k = {num: i for i, num in enumerate(arr2)}
         return sorted(arr1, key=lambda a: k.get(a, a + 1000))

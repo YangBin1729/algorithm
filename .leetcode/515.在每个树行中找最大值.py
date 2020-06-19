@@ -57,7 +57,7 @@ class Solution:
         return res
 
 
-    def largestValues(self, root: TreeNode) -> List[int]:
+    def largestValues3(self, root: TreeNode) -> List[int]:
         res, level = [], [root]
         while any(level):
             lvl_max = float('-inf')
@@ -72,6 +72,30 @@ class Solution:
             res.append(lvl_max)
             level = next_lvl
         return res
+
+
+    def largestValues(self, root: TreeNode) -> List[int]:
+        """
+        记录节点所在的层
+        """
+        res = []
+        if not root:
+            return res 
+            
+        stack = [(root, 0)]
+        while stack:
+            node, ind = stack.pop()
+            if ind == len(res):
+                res.append(node.val)
+            else:
+                res[ind] = max(res[ind], node.val)
+
+            if node.right:
+                stack.append((node.right, ind+1))
+            if node.left:
+                stack.append((node.left, ind + 1))
+        return res 
+
 
 
 # @lc code=end

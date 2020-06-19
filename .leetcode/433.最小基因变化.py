@@ -70,7 +70,7 @@ from typing import List
 # @lc code=start
 class Solution:
 
-    def minMutation(self, start: str, end: str, bank: List[str]) -> int:
+    def minMutation1(self, start: str, end: str, bank: List[str]) -> int:
         """
         1. BFS：
         遍历基因库(bank)，保留能由当前序列(curr)合法变异得到的序列。
@@ -108,6 +108,37 @@ class Solution:
                     queue.append([s, mutations + 1])
                     explored.add(s)
         return -1
+
+
+    def minMutation(self, start: str, end: str, bank: List[str]) -> int:
+        """
+        3. 双向BFS
+        """
+        bank = set(bank)
+        if end not in bank:
+            return -1
+
+        front, back = {start}, {end}
+        changes = 0
+        while front:
+            changes += 1
+
+            nxt_front = set()
+            for s in front:
+                for i in range(len(s)):
+                    for c in 'ACGT':
+                        nxt_s = s[:i] + c + s[i+1:]
+                        if nxt_s != s:
+                            if nxt_s in back:
+                                return changes
+                            if nxt_s in bank:
+                                nxt_front.add(nxt_s)
+                                bank.remove(nxt_s)
+            
+            front = nxt_front
+            while len(front) > len(back):
+                front, back = back, front 
+        return -1 
 
 
 # @lc code=end

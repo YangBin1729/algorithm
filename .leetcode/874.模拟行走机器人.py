@@ -67,7 +67,7 @@ class Solution:
 
     def robotSim(self, commands: List[int], obstacles: List[List[int]]) -> int:
         # TODO:
-        x, y, d_index = 0, 0, 0     # 初始位置及方向
+        x, y, cur = 0, 0, 0     # 初始位置及方向
         obstacles = set(map(tuple, obstacles))
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]     # 四个方向
 
@@ -75,15 +75,15 @@ class Solution:
 
         for cmd in commands:
             if cmd == -2:
-                d_index = (d_index - 1) % 4     # 关键点，方向的处理！！！
+                cur = (cur - 1) % 4     # 关键点，方向的处理！！！
             if cmd == -1:
-                d_index = (d_index + 1) % 4
+                cur = (cur + 1) % 4
             else:
                 for _ in range(cmd):
-                    if (x + directions[d_index][0],
-                            y + directions[d_index][1]) not in obstacles:
-                        x += directions[d_index][0]
-                        y += directions[d_index][1]
+                    nxt_x = x + directions[cur][0]
+                    nxt_y = y + directions[cur][1]
+                    if (nxt_x, nxt_y) not in obstacles:
+                        x, y = nxt_x, nxt_y
                         res = max(res, x * x + y * y)
         return res
 

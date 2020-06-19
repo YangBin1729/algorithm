@@ -38,16 +38,16 @@ class Solution:
         """
         1. 二分查找
         """
-        left, right = 1, num
-        while left <= right:
-            mid = (left + right) // 2
+        l, r = 1, num
+        while l <= r:
+            mid = (l + r) // 2
             square = mid * mid
             if square == num:
                 return True
             elif square > num:
-                right = mid - 1
+                r = mid - 1
             else:
-                left = mid + 1
+                l = mid + 1
         return False
 
     def isPerfectSquare_2(self, num: int) -> bool:

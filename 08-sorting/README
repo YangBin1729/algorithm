@@ -1,0 +1,224 @@
+# 排序算法
+
+# 如何分析一个“排序算法”？
+### 排序算法的执行效率
+1.最好情况、最坏情况、平均情况时间复杂度
+   - 有序度不同的数据，对于排序的执行时间会有影响的
+   - 不同时间复杂度情况下，对应的原始数据
+
+2.时间复杂度的系数、常数 、低阶
+   - 在对同一阶时间复杂度的排序算法性能对比的时候，就要把系数、常数、低阶也考虑进来
+
+3.比较次数和交换（或移动）次数
+   - 两种操作，一种是元素比较大小，另一种是元素交换或移动
+
+### 排序算法的内存消耗
+- 空间复杂度：原地排序（Sorted in place），特指空间复杂度是 O(1) 的排序算法
+
+### 排序算法的稳定性
+- 如果待排序的序列中存在值相等的元素，经过排序之后，相等元素之间原有的先后顺序不变
+- 之所以要考察稳定性：实际排序的不是整数，而是对象，按照某个特定的属性值排序，但需要保持其它属性值的顺序
+
+
+# 一、比较类排序
+## 冒泡排序（Bubble Sort）：
+将大的元素**向上冒泡**，移动到数组右边
+- 每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。
+- 一次冒泡会让至少一个元素移动到它应该在的位置，重复 n 次，就完成了 n 个数据的排序工作。
+```python 
+def bubble_sort(nums):
+    n = len(nums)
+    for i in range(n):
+
+        flag = False                # 提前退出冒泡循环的标志
+        for j in range(n-i-1):
+            if nums[j] > nums[j+1]:
+                nums[j], nums[j+1] = nums[j+1], nums[j]
+                flag = True
+        
+        if not flag:                # 没有数据交换，提前退出
+            break
+    return nums
+```
+- 空间复杂度 O(1)，稳定的排序算法，
+- 最好情况下O(1)复杂度，最坏情况下数据倒序排列O(n^2)时间复杂度
+- 平均时间复杂度：
+    - 数据的有序度：有序元素对`i<j,a[i]<=a[j]`
+        - 倒序数组，有序对为0
+        - 完全有序数组，如 `[1,2,3,4,5]`，则有序度是 `n*(n-1)/2`，**满有序度**
+        - 逆序度 = 满有序度 - 有序度
+        - 冒泡排序每交换一次，有序度加 1，总交换次数为逆序度，即**`n*(n-1)/2`-初始有序度**
+    - 因此考虑最好及最差，然后平均，平均情况下，操作数`n*(n-1)/4`次交换，时间复杂度 O(n^2)
+    
+## 插入排序（Insertion Sort）：    
+保持待排序元素**左边所有元素有序**，找到合适的位置，将该元素插入到该位置处
+```python
+def insertion_sort(nums):
+    n = len(nums)
+    for i in range(1, n):
+        curr = nums[i]
+        j = i - 1
+        while j >= 0 and nums[j] > curr:
+            nums[j + 1] = nums[j]
+            j -= 1
+        nums[j + 1] = curr
+    return nums
+```
+
+- 空间复杂度是 O(1)，稳定的排序算法
+- 最好情况下O(n)复杂度，最坏情况下数据倒序排列O(n^2)时间复杂大，平均 O(n^2)
+
+## 选择排序（Selection Sort）：
+数据分为已排序区间和未排序区间，每次从未排序区间中找到最小的元素，将其放到已排序区间的末尾
+```python
+def selection_sort(nums):
+    n = len(nums)
+    for i in range(n - 1):
+        min_index = i
+        for j in range(i + 1, n):
+            if nums[j] < nums[min_index]:
+                min_index = j
+        nums[i], nums[min_index] = nums[min_index], nums[i]
+    return nums
+```
+- 空间复杂度是 O(1)，平均时间复杂度 O(n^2)
+- 但是**不稳定的排序算法**：[5，8，5，2，9]，第一次找到最小值 2，arr[0]=5 会和 2 交换位置，最终两个 5 的相对位置改变了
+
+## 冒泡 vs 插入
+```python
+# 冒泡排序中数据的交换操作：
+if a[j] > a[j+1]:
+    a[j], a[j+1] = a[j+1], a[j]
+   
+# 插入排序中数据的移动操作：
+if a[j] > val:  
+    a[j+1] = a[j] 
+```
+- 冒泡排序的数据交换要比插入排序的数据移动要复杂，冒泡排序需要交换两个数，而插入排序只需要一次赋值
+- 相对来说，插入排序更快
+
+
+## 归并排序（Merge Sort）：
+```python
+def merge(s1, s2, s):
+    i = j = 0
+    while i + j < len(s):  # KEY：关键的判断逻辑！！！
+        if j == len(s2) or (i < len(s1) and s1[i] < s2[j]):
+            s[i + j] = s1[i]
+            i += 1
+        else:
+            s[i + j] = s2[j]
+            j += 1
+    return s
+
+def merge_sort(s):
+    if len(s) < 2:
+        return s
+    mid = len(s) // 2
+    s1 = merge_sort(s[:mid])
+    s2 = merge_sort(s[mid:])
+    return merge(s1, s2, s)
+```
+- 稳定的排序算法；不管是最好情况、最坏情况，还是平均情况，时间复杂度都是 O(nlogn)
+- 但是不是原地排序，空间复杂度是 O(n)
+
+
+## 快速排序（Quick sort）：
+数组中取标杆 pivot，将小元素放 pivot 左边，大元素放右侧；然后递归的分别对左、右两部分快排
+```python
+def partition(nums, left, r):
+    pivot = nums[left]
+    i = left + 1  # KEY： i-left 表示小于等于 pivot 元素的个数
+    for j in range(left + 1, r):
+        if nums[j] < pivot:
+            nums[j], nums[i] = nums[i], nums[j]
+            i += 1
+    nums[left], nums[i - 1] = nums[i - 1], nums[left]
+    return i - 1
+
+
+def quick_sort(nums, l, r):
+    if l >= r:
+        return
+    j = partition(nums, l, r)
+    quick_sort(nums, l, j)
+    quick_sort(nums, j + 1, r)
+    return nums
+```
+- 快速排序并不是一个稳定的排序算法，原地排序算法
+- 时间复杂度都可以做到 O(nlogn)，只有在极端情况下，才会退化到 O(n^2)
+
+## 归并 vs 快排
+归并的过程是由下至上，先处理子问题，然后合并；快排相反，由上至下，先分区，再处理子问题
+
+
+
+# 二、非比较类排序：
+线性排序（Linear sort），时间负责度 O(n)；不基于比较的排序算法，都不涉及元素之间的比较操作：桶排序、计数排序、基数排序
+
+
+
+##  桶排序（Bucket sort）
+
+将要排序的数据分到几个有序的桶里，每个桶里的数据再单独进行排序。
+时间复杂度：
+- 如果要排序的数据有 n 个，把它们均匀地划分到 m 个桶内，每个桶里就有 k=n/m 个元素。
+- 每个桶内部使用快速排序，时间复杂度为 O(k * logk)。
+- m 个桶排序的时间复杂度就是 O(m * k * logk)，整个桶排序的时间复杂度就是 O(n*log(n/m
+))。
+- 当桶的个数 m 接近数据个数 n 时，log(n/m) 就是一个非常小的常量，这个时候桶排序的时间复杂度接近 O(n)。
+
+
+
+限制：
+
+- 要排序的数据需要很容易就能划分成 m 个桶，并且，桶与桶之间有着天然的大小顺序
+
+- 数据在各个桶之间的分布是比较均匀的，极端情况如果数据都被划分到一个桶里，那就退化为 O(nlogn) 的排序算法了。
+
+桶排序比较适合用在外部排序中。所谓的外部排序就是数据存储在外部磁盘中，数据量比较大，内存有限，无法将数据全部加载到内存中。
+
+```python
+def bucket_sort(nums):
+    min_, max_ = min(nums), max(nums)
+    
+    bucket_count = (max_ - min_) // 5 + 1  # 默认每个桶的容量为 5
+    buckets = [[] for i in range(bucket_count)]
+    
+    for num in nums:
+        ind = (num - min_) // 5  # 将每个数映射到特定的桶中，每个桶有顺序
+        buckets[ind].append(num)
+    
+    res = []
+    for buck in buckets:
+        if bool(buck):
+            res.extend(insertion_sort(buck))  # 对每个桶中的数插入排序
+    return res
+```
+
+
+
+
+
+
+
+## 计数排序（Counting sort）
+
+计数排序其实是桶排序的一种特殊情况。当要排序的 n 个数据，所处的范围并不大的时候，比如最大值是 k，把数据划分成 k 个桶。每个桶内的数据值都是相同的，省掉了桶内排序的时间。
+
+```python
+def counting_sort(nums):
+    max_num = max(nums)  # O(N) 时间可以完成
+    bucket = [0] * (max_num + 1)
+    for i in range(len(nums)):
+        bucket[nums[i]] += 1
+    
+    sortedIndex = 0
+    for j in range(max_num + 1):
+        while bucket[j] > 0:
+            nums[sortedIndex] = j
+            sortedIndex += 1
+            bucket[j] -= 1
+    return nums
+```
+

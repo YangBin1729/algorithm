@@ -38,20 +38,32 @@
 
 # @lc code=start
 class Solution:
+
     def mySqrt(self, x: int) -> int:
         # TODO: 1. 牛顿迭代法
+        if x < 2:
+            return x
 
+        x0 = x
+        x1 = (x0 + x / x0) / 2
+        while abs(x1 - x0) >= 1:
+            x0 = x1
+            x1 = (x1 + x / x0) / 2
+        return int(x1)
+
+    def mySqrt2(self, x: int) -> int:
         # 2. 二分查找
-        if x == 0: return 0
-        left, right = 1, x // 2
-        while left < right:
-            mid = (left + right + 1) / 2
+        if x == 0:
+            return 0
+        l, r = 1, x // 2
+        while l < r:
+            mid = (l + r + 1) / 2
             square = mid * mid
             if square > x:
-                right = mid - 1
+                r = mid - 1
             else:
-                left = mid
-        return left
+                l = mid
+        return l
 
 
 # @lc code=end

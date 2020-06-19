@@ -77,7 +77,10 @@
 class Solution:
 
     def isMatch(self, s: str, p: str) -> bool:
-        # TODO
+        """
+        动态规划：
+        - dp[i][j] 表示 s[:i] 与 p[:j] 是否匹配
+        """
         n = len(s)
         m = len(p)
         

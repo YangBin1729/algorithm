@@ -44,32 +44,35 @@ class Solution:
 
     def search(self, nums: List[int], target: int) -> int:
         """
-        1. 二分搜索        
+        1. 二分搜索：需要关注边界点的处理    
         """
         if not nums:
             return -1
 
-        left, right = 0, len(nums) - 1
-        while left <= right:
-            mid = (left + right) // 2
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            print("cur boundary:", l, r)
+
+            mid = (l + r) // 2
             if nums[mid] == target:
                 return mid
-            elif nums[mid] > nums[right]:
-                if nums[left] <= target < nums[mid]:
-                    right = mid - 1
+            elif nums[mid] > nums[r]:
+                if nums[l] <= target < nums[mid]:
+                    r = mid - 1
                 else:
-                    left = mid + 1
-            else:
-                if nums[mid] < target <= nums[right]:
-                    left = mid + 1
+                    l = mid + 1
+            else: 
+                if nums[mid] < target <= nums[r]:
+                    l = mid + 1
                 else:
-                    right = mid - 1
+                    r = mid - 1
         return -1
 
     def search2(self, nums: List[int], target: int) -> int:
         """
         2. 先找到找到最小值索引，然后搜索
         """
+
         def find_rotate_index(left, right):
             if nums[left] < nums[right]:
                 return 0
@@ -115,3 +118,4 @@ class Solution:
 # @lc code=end
 
 print(Solution().search([2, 3, 1], 1))
+

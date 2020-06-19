@@ -50,16 +50,16 @@ class Solution:
         """
         二分查找
         """
-        left, right = 0, len(nums) - 1
-        while left < right:
-            mid = (left + right) // 2
-            if nums[mid] > nums[right]:
-                left = mid + 1
-            elif nums[mid] < nums[right]:
-                right = mid
+        l, r = 0, len(nums) - 1
+        while l < r:
+            mid = (l + r) // 2
+            if nums[mid] > nums[r]:
+                l = mid + 1
+            elif nums[mid] < nums[r]:
+                r = mid
             else:
-                right = right - 1     # KEY：关键的逻辑判断！
-        return nums[left]
+                r = r - 1     # KEY：关键的逻辑判断！
+        return nums[l]
 
 
 # @lc code=end

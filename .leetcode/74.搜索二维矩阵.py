@@ -58,15 +58,16 @@ class Solution:
             return False
 
         m, n = len(matrix), len(matrix[0])
-        left, right = 0, m * n - 1
-        while left <= right:
-            mid = (left + right) // 2
-            if matrix[mid // n][mid % n] == target:
+        l, r = 0, m * n - 1
+        while l <= r:
+            mid = (l + r) // 2
+            i, j = divmod(mid, n)
+            if matrix[i][j] == target:
                 return True
-            elif matrix[mid // n][mid % n] > target:
-                right = mid - 1
+            elif matrix[i][j] > target:
+                r = mid - 1
             else:
-                left = mid + 1
+                l = mid + 1
         return False
 
 

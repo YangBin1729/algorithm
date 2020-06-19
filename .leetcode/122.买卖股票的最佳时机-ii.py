@@ -63,22 +63,40 @@ class Solution:
         """
         峰谷法，遇到峰谷就买入，在接下来的峰值就卖出；
         """
-        if not prices or len(prices) == 1:
+        n = len(prices)
+        if n <= 1:
             return 0
 
         i = 0
         valley = peak = prices[0]
         res = 0
 
-        while i < len(prices) - 1:
-            while i < len(prices) - 1 and prices[i] >= prices[i + 1]:
+        while i < n - 1:
+            while i < n - 1 and prices[i] >= prices[i + 1]:
                 i += 1
             valley = prices[i]
-            while i < len(prices) - 1 and prices[i] <= prices[i + 1]:
+            
+            while i < n - 1 and prices[i] <= prices[i + 1]:
                 i += 1
             peak = prices[i]
 
             res += peak - valley
+        return res
+
+    def maxProfit_3(self, prices: List[int]) -> int:
+        """
+        峰谷法，遇到峰谷就买入，在接下来的峰值就卖出；
+        """
+        i = j = 0     # 谷底和峰值索引
+        res = 0
+        for k, p in enumerate(prices):
+            if p <= prices[j]:     # 到达峰值,开始下坡,加上收益;下坡时,无峰谷,其索引同时向前移动
+                res += prices[j] - prices[i]
+                i = j = k
+            else:     # 上坡时,更新峰值
+                j += 1
+
+        res += prices[j] - prices[i]     # 防止最后一点为峰值点
         return res
 
 

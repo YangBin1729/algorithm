@@ -56,6 +56,7 @@
 # 解释: endWord "cog" 不在字典中，所以无法进行转换。
 #
 #
+
 from typing import List
 
 
@@ -74,7 +75,7 @@ class Solution:
         queue = deque([(beginWord, 1)])
         explored = set(beginWord)
 
-        all_combo_dict = defaultdict(list)    
+        all_combo_dict = defaultdict(list)
         for word in wordList:
             for i in range(N):
                 all_combo_dict[word[:i] + "*" + word[i + 1:]].append(word)
@@ -125,37 +126,39 @@ class Solution:
             return 0
         from string import ascii_lowercase
 
-        front, back = {beginWord}, {endWord}
+        front, back = {beginWord}, {endWord}     # 分别记录从起点单词和目标单词开始的当前层的单词
         changes = 1
         wordSet = set(wordList)
 
         while front:
-            changes += 1
-            next_front = set()
+            changes += 1     # 记录已转换次数
+            nxt_front = set()
 
             for word in front:
                 for i in range(len(beginWord)):
                     for c in ascii_lowercase:
                         if c != word[i]:
-                            new_word = word[:i] + c + word[i + 1:]
+                            new_word = word[:i] + c + word[i + 1:]     # 转换下一个单词
                             if new_word in back:
                                 return changes
-                            if new_word in wordSet:
-                                next_front.add(new_word)
-                                wordSet.remove(new_word)
 
-                # for next in wordList:
-                #     if isValid(word, next):
-                #         if next in back:
+                            if new_word in wordSet:     # 转换单词是否在候选集中
+                                nxt_front.add(new_word)     # 下一层单词
+                                wordSet.remove(new_word)     # 从候选集中删除满足条件的下一层单词
+
+                # 下一层的合法单词的另一种实现方法
+                # for nxt in wordList:
+                #     if isValid(word, nxt):
+                #         if nxt in back:
                 #             return changes
-                #         if next in wordSet:
-                #             next_front.add(next)
-                #             wordSet.remove(next)
-                    
-            front = next_front
+                #         if nxt in wordSet:
+                #             nxt_front.add(nxt)
+                #             wordSet.remove(nxt)
+
+            front = nxt_front
 
             if len(back) < len(front):
-                front, back = back, front
+                front, back = back, front     # 比较前向和逆向的当前层的节点数
         return 0
 
 

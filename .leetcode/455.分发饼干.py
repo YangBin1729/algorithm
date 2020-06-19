@@ -56,6 +56,10 @@ from typing import List
 class Solution:
 
     def findContentChildren(self, g: List[int], s: List[int]) -> int:
+        """
+        贪心算法：每次选择 (饼干量-胃口值>=0) 但差值最小的组合
+        - 将胃口列表和饼干列表先排序，然后遍历
+        """
         g, s = sorted(g), sorted(s)     # 从小到大排列
         i, j = 0, 0
         res = 0

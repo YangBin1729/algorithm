@@ -44,25 +44,25 @@ from typing import List
 class Solution:
 
     def leastInterval(self, tasks: List[str], n: int) -> int:
-        # TODO
+        # TODO:任务种类数多于间隔时间时？
+        from collections import Counter
         m = len(tasks)
         if m <= 1:
             return m
 
-        task_map = dict()
+        tasks = Counter(tasks).most_common()
+        max_cnt = tasks[0][1]
+
+        res = (max_cnt - 1) * (n + 1)
+
         for task in tasks:
-            task_map[task] = task_map.get(task, 0) + 1
-
-        sorted_tasks = sorted(task_map.items(), kay=lambda x: x[1], reverse=True)
-
-        max_task_count = sorted_tasks[0][1]
-
-        res = (max_task_count - 1) * (n - 1)
-
-        for task in sorted_tasks:
-            if task[1] == max_task_count:
+            if task[1] == max_cnt:
                 res += 1
         return res if res >= m else m
 
 
 # @lc code=end
+
+tasks = ["A", "A", "A", "B", "B", "B", "C", "C", "C", "D", "D"]
+n = 2
+print(Solution().leastInterval(tasks, n))

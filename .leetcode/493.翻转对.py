@@ -46,7 +46,9 @@ from typing import List
 class Solution:
 
     def reversePairs_1(self, nums: List[int]) -> int:
-        # 1. 超时！！！
+        """
+        1. 暴力遍历，超时！！！
+        """
         ans = 0
         for i in range(len(nums) - 1):
             for j in range(i + 1, len(nums)):
@@ -55,7 +57,9 @@ class Solution:
         return ans
 
     def reversePairs(self, nums: List[int]) -> int:
-        # 2. 归并排序时计数翻转对
+        """
+        2. 对数组归并排序，在合并阶段计数翻转对
+        """
 
         res = 0
 
@@ -80,8 +84,10 @@ class Solution:
         return res
 
     def reversePairs_2(self, nums: List[int]) -> int:
-        # TODO:
-        # 树状数组：Binary Indexed Tree
+        """
+        TODO:
+        树状数组：Binary Indexed Tree
+        """
         new_nums = nums + [x*2 for x in nums]
         sorted_set = sorted(list(set(new_nums)))
         tree = BIT(len(sorted_set))
@@ -121,5 +127,3 @@ class BIT:
 nums = [4, 5, 1, 2, 3]
 print(Solution().reversePairs(nums))
 
-
-# 树状数组

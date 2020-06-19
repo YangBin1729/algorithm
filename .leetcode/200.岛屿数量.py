@@ -48,25 +48,25 @@ class Solution:
     def numIslands(self, grid: List[List[str]]) -> int:
         """
         1. DFS：
-        从 1 出发，遍历所有直达的 1 ，并将其标记为 0；
+        从 1 出发，遍历所有直达的 1 ，并将其标记；
         """
         if not grid:
             return 0
 
         n, m = len(grid), len(grid[0])
 
-        def bfs(i, j):
-            for di, dj in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
-                if 0 <= i + di < n and 0 <= j + dj < m and grid[i + di][j + dj] == '1':
-                    grid[i + di][j + dj] = '0'
-                    bfs(i + di, j + dj)
+        def dfs(i, j):
+            grid[i][j] = '#'
+            for dx, dy in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
+                nxt_i, nxt_j = i + dx, j + dy
+                if 0 <= nxt_i < n and 0 <= nxt_j < m and grid[nxt_i][nxt_j] == '1':
+                    dfs(nxt_i, nxt_j)
 
         res = 0
         for i in range(n):
             for j in range(m):
                 if grid[i][j] == '1':
-                    grid[i][j] = '0'
-                    bfs(i, j)
+                    dfs(i, j)
                     res += 1
         return res
 
@@ -160,7 +160,7 @@ class Solution:
                         next_j = j + y
                         if 0 <= next_i < row and 0 <= next_j < col and grid[next_i][
                                 next_j] == "1":
-                            union(next_i * col + next_j, i * col + j) 
+                            union(next_i * col + next_j, i * col + j)
         res = set()
         for i in range(row):
             for j in range(col):

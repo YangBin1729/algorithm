@@ -1,1 +1,1 @@
-print(movingCount(20, 20, 6))
+print(heap_sort(nums, 0, len(nums)))

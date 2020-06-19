@@ -48,13 +48,23 @@ class Solution:
 
     def candy(self, ratings: List[int]) -> int:
         n = len(ratings)
-        candies = [1] * n
-        
+
+        left = [1] * n
+        for i in range(1, n):     # 比左边学生评分高的糖果多
+            if ratings[i] > ratings[i - 1]:
+                left[i] = left[i - 1] + 1
+
+        right = [1] * n
+        for i in range(n - 1, 0, -1):     # 比右边学生评分高的糖果多
+            if ratings[i - 1] > ratings[i]:
+                right[i - 1] = right[i] + 1
+
+        candies = [max(l, r) for l, r in zip(left, right)] # 比左右两边都大
 
         return sum(candies)
 
 
 # @lc code=end
 
-ratings = [1,0,2]
+ratings = [1, 0, 2]
 print(Solution().candy(ratings))
